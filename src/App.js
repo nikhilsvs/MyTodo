@@ -2,8 +2,9 @@ import React , {Component} from 'react';
 import logo from './logo.svg';
 import Main from './components/maincomponent';
 import {ConfigureStore} from './redux/ConfigureStore';
+import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import './App.css';
+//import './App.css';
 
 const store = ConfigureStore();
 
@@ -13,7 +14,9 @@ class App extends Component{
     
     return(
       <Provider store={store}>
-        <Main/>
+        <BrowserRouter>
+          <Main/>
+        </BrowserRouter>  
       </Provider>
       
     );

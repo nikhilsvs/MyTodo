@@ -25,6 +25,16 @@ export const Tasks = (state={
 
         case ActionTypes.SEARCH_TASK:
             return {...state,tasks:action.payload}
+
+        case ActionTypes.UPDATE_TASK_SUCCESS:
+            let updatedTasks = state.tasks.map((item,idx)=>{
+                if(item._id == action.payload._id){
+                    item = action.payload;
+                }
+
+                return item;
+            });
+            return {...state,tasks:updatedTasks};
             
         default : return state; 
 

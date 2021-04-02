@@ -1,8 +1,10 @@
 import React , {Component} from 'react';
-
+import Header from './Headercomponent';
 import {Card , CardBody , CardText , CardHeader, 
         Button ,  UncontrolledCollapse,Jumbotron,Input} from 'reactstrap';
 
+
+        
 class Task extends Component{
 
     constructor(props){
@@ -17,13 +19,15 @@ class Task extends Component{
     }
 
     componentDidMount(){
+    
         this.props.tasks.forEach((task,index)=>{
             if(task.isCompleted){
                 
-                var ele = document.getElementById(index);
-                ele.style.backgroundColor="LightGreen";
-                ele.style.textDecoration="line-through";
-                ele.style.opacity="0.7";
+                var ele = document.getElementById(task._id);
+                var ele2 = ele.getElementsByClassName('itemCard')[0];
+                ele2.style.backgroundColor="LightGreen";
+                ele2.style.textDecoration="line-through";
+                ele2.style.opacity="0.7";
             }
         })
     }
@@ -32,10 +36,12 @@ class Task extends Component{
         this.props.tasks.forEach((task,index)=>{
             if(task.isCompleted){
                 
-                var ele = document.getElementById(index);
-                ele.style.backgroundColor="LightGreen";
-                ele.style.textDecoration="line-through";
-                ele.style.opacity="0.7";
+                var ele = document.getElementById(task._id);
+                var ele2 = ele.getElementsByClassName('itemCard')[0];
+                ele2.style.backgroundColor="LightGreen";
+                ele2.style.textDecoration="line-through";
+                ele2.style.opacity="0.7";
+                ele2.style.zIndex="2";
             }
         })
     }
@@ -45,20 +51,18 @@ class Task extends Component{
             isCardOpen:!this.state.isCardOpen
         })
     }
-    Completed(idx,index){
+    Completed(id){
         
-            this.props.tasks[index].isCompleted=true;
-            this.props.tasks.forEach((task,index)=>{
-                console.log(task);
-            })
+            let idx = this.props.tasks.map((item)=>{return item._id;}).indexOf(id);
+            this.props.tasks[idx].isCompleted = true;
+            let tempTask = this.props.tasks[idx];
+            this.props.updateTask(tempTask);
             this.putStyle();
     
     }
     handleFilter(event){
         this.props.tasks.forEach((task,index)=>{
-            var idx = task.name;
-            idx = idx.replace(/\s+/g, '');
-            let item = document.getElementById(`${idx}${idx}${idx}`);
+            let item = document.getElementById(`${task._id}`);
             switch(event.target.value){
                 case 'All':
                     item.style.display = "block";
@@ -86,9 +90,7 @@ class Task extends Component{
     handleSearch(todos){
         var searchText = document.getElementById("search");
         this.props.tasks.forEach((task,index)=>{
-            var idx = task.name;
-            idx = idx.replace(/\s+/g, '');
-            let item = document.getElementById(`${idx}${idx}${idx}`);
+            let item = document.getElementById(`${task._id}`);
             let searchedtext = item.getElementsByTagName("h6")[0].innerText;
             let searchtextboxval = searchText.value;
             let re = new RegExp(searchtextboxval, 'gi');
@@ -102,26 +104,29 @@ class Task extends Component{
     }
     render(){
 
+
         const todos = this.props.tasks.map((task,index) => {
-            var idx = task.name;
+            var idx = task.taskname;
+
             idx = idx.replace(/\s+/g, '');
+
             return(
-                <div key = {index} className="col-12" id={`${idx}${idx}${idx}`}>
-                    <Card className="m-1" >
-                        <CardHeader className="d-flex" id={index}>
-                           <h6>{task.name}</h6>
+                <div key = {task._id} className="col-12" id={task._id}>
+                    <Card className="m-1 itemCard" >
+                        <CardHeader className="d-flex">
+                           <h6>{task.taskname}</h6>
                             
                             <div className="row ml-auto align-self-center">
                                 <Button className="btn btn-danger btn-outline m-1"
-                                    onClick={()=>this.props.deleteTask(task)}><span className="fa fa-trash"></span></Button>
+                                    onClick={()=>this.props.deleteTask(task._id)}><span className="fa fa-trash"></span></Button>
                                 <Button className="btn btn-success btn-outline m-1"
-                                    onClick={()=>this.Completed(idx,index)}><span className="fa fa-check"></span></Button>
+                                    onClick={()=>this.Completed(task._id)}><span className="fa fa-check"></span></Button>
                                 <Button className="m-1 btn-outline-dark" id={idx}  ><span className="fa fa-bars"></span></Button>
                             </div>    
                         </CardHeader>
                         <UncontrolledCollapse toggler={idx}>
                             <CardBody  >
-                                <CardText>{task.description}</CardText>
+                                <CardText>{task.desc}</CardText>
                             </CardBody>
                         </UncontrolledCollapse>
                         
@@ -133,6 +138,9 @@ class Task extends Component{
 
         return(
             <>
+            <Header tasks={this.props.tasks} addTask={this.props.addTask}
+                    deleteAll={this.props.deleteAll} addNewTask = {this.props.addNewTask}
+                    auth = {this.props.auth} logoutUser = {this.props.logoutUser}/>
             <Jumbotron>
                 <div className="container">
                     <div className="row">
@@ -157,7 +165,14 @@ class Task extends Component{
             </Jumbotron>
             <div className="container">
                 <div className="row">
-                    {todos}
+                    {
+                        this.props.tasks.length>0
+                        ?
+                        todos
+                        :
+                        <h1>You have not added any tasks till yet</h1>
+                    }
+                    
                 </div>
             </div>
            

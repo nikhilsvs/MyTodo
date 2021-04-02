@@ -17,6 +17,7 @@ class Header extends Component{
         this.toggleNav = this.toggleNav.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
         
     }
 
@@ -36,64 +37,84 @@ class Header extends Component{
         alert("TaskName : " +  this.taskname.value + "\n"+ 
                 "Description : " + this.desc.value);
         var task = {
-            name:this.taskname.value,
-            description:this.desc.value,
+            taskname:this.taskname.value,
+            desc:this.desc.value,
             isCompleted:false
         };
-        this.props.addTask(task);
+        this.props.addNewTask(task);
         event.preventDefault();
     }
 
-   
+   handleLogout(){
+       this.props.logoutUser();
+       window.location.reload(false);
+   }
 
    render(){
        return(
            <>
-            <Navbar dark expand='sm'>
+            <Navbar dark expand='sm' className="fixed-top navbar-dark">
                 <div className="container">
-                    
-                    <NavbarBrand className="mr-auto" href="/">
+                    <NavbarToggler onClick={this.toggleNav}></NavbarToggler>
+                    <NavbarBrand href="/">
                            MyTodo
                     </NavbarBrand>
-                    
-                        <Nav navbar className="ml-auto">
-                           
+                    <Collapse isOpen={this.state.isNavOpen} navbar>
+                        <Nav navbar className="mr-auto">
+                            
                             <NavItem>
                                 <Button className="btn btn-block-success ml-auto" onClick={this.toggleModal}>Add New Task</Button>
-                                <Button className="btn btn-danger m-2" onClick={this.props.deleteAll}>Delete All</Button>
-                                
                             </NavItem>
-                            
+                            <NavItem>
+                                <Button className="btn btn-danger m-2" onClick={this.props.deleteAll}>Delete All</Button>
+                            </NavItem>
+                           
                         </Nav>
-                    
-                    
+                        <Nav navbar className="ml-auto">
+                            <NavItem>
+                                <NavLink className = "nav-link username" to="/tasks">{this.props.auth.user.username}</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <Button className="btn btn-outline-warning m-2" onClick = {this.handleLogout}>Logout</Button>
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
                 </div>
             </Navbar>
             
              <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-                 <div className="container">
+               
                     <ModalHeader toggle={this.toggleModal}>
                     Add New Task
                     </ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
-                                <Label htmlFor="taskname">Your Task</Label>
-                                <Input type="text" name="taskname" id="taskname" 
-                                placeholder="Enter New Task"
-                                innerRef={(input)=>this.taskname=input}/>
+                                <Label className="col-md-6" htmlFor="taskname">Your Task</Label>
+                                <div className="col-md-12">
+                                    <Input type="text" name="taskname" id="taskname" 
+                                    placeholder="Enter New Task"
+                                    innerRef={(input)=>this.taskname=input}/>
+                                </div>
+                               
                             </FormGroup>
                             <FormGroup row>
-                                <Label htmlFor="desc">Description</Label>
-                                <Input type="textarea" name="desc" id="desc" rows="5" placeholder="Describe Your Task"
-                                innerRef={(input)=>this.desc=input}/>
+                                <Label className="col-md-6" htmlFor="desc">Description</Label>
+                                <div className="col-md-12">
+                                    <Input type="textarea" name="desc" id="desc" rows="5" placeholder="Describe Your Task"
+                                    innerRef={(input)=>this.desc=input}/>
+                                </div>
+                                
                             </FormGroup>
                             <FormGroup row>
-                                <Button className="bg-primary" type="submit" >Submit</Button>
+                                <div className="col-md-12">
+                                    <Button className="btn-outline-warning btn-block" type="submit" >Submit</Button>
+                                </div>
+                                
                             </FormGroup>
                         </Form>
                     </ModalBody>
-                 </div>  
+                
             </Modal>
          </>
        );

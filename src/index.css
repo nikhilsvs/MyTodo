@@ -11,3 +11,50 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.loginrow{
+  height:100vh;
+  width:100%;
+}
+.loginLeft , .loginRight{
+  background-color:black;
+  color:whitesmoke;
+
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.navbar-dark{
+  background-color:black;
+}
+.jumbotron{
+  background-color: indianred;
+  margin-top:50px;
+}
+.username{
+  font-size: 20px;
+}
+
+
+.close span{
+  color:white;
+}
+.signupHeader{
+  background-color:black;
+  color:white;
+}
+.signupbtn{
+  color:#dc3545;
+  font-style: italic;
+  cursor: pointer;
+  transition: 0.1s ease-in-out;
+  -o-transition: 0.1s ease-in-out;
+  -webkit-transition: 0.1s ease-in-out;
+}
+.signupbtn:hover{
+  color:#dc3545;
+  font-style: italic;
+  font-weight: 700;
+  cursor: pointer;
+}
+
